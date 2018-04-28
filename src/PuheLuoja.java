@@ -104,6 +104,51 @@ class PuheLuoja{
     }
 
     private String valitseEnsimmainenSana(){
+
+        //Tässä on nyt 3 vaihtoehtoa miten tämä voitaisiin tehdä.
+        //1) Lisää uusi tiedosto joka kertoo sanojen yleisyyden ensimmäisenä sanana. --> 2 tiedostoa --> huono.
+        //2) Kerätään ohjelman aikana KAIKKIEN sanojen yleisyys ja tehdään sana homma kuin sanan valinnassa --> hidas
+        //3) Muokataan tiedosto rankennetta siten että siinä olisi sanan yleisyys mukana --> työläs
+        //Päädyin vaihtohtoon 2, koska ohjelman nopeudella ei minulle oikein hirveästi väliä kun se hidastuisi vain
+        //noin 1-10 sec.
+
+        HashMap<String,Integer> sananYleisyys = new HashMap<String,Integer>();
+        ArrayList<String> avaimet = new ArrayList<String>();
+        avaimet.addAll(sanatHashMap.keySet());  //Lista kaikista sanoista
+        int sanojaYhteensä = 0;
+
+        //Lasketaan sanojen yleisyys;
+        for (int i = 0; i < sanatHashMap.keySet().size(); i++) {
+            //Lasketaan yhden sanan yleisyys ja lisätään se sananYleisyys listaan.
+            int sanaaKautettyYhtKrt = seuraavienSanojenYleisyysMaara(avaimet.get(i));
+            sanojaYhteensä += sanaaKautettyYhtKrt;
+            sananYleisyys.put(avaimet.get(i), sanaaKautettyYhtKrt);
+        }
+
+        Float yleisyysDesimaali = 0f;
+        Float satunnainenDesimaali = satunnainen.nextFloat();
+        Float sananYleisyysDesimaali = 0f;
+
+        for (int i = 0; i < avaimet.size(); i++) {
+
+            
+            sananYleisyysDesimaali = (float)(Integer)sananYleisyys.get(avaimet.get(i))/sanojaYhteensä; //Montako prosenttia desimaalina. On käyty kaikista sana vaihtoehdoista läpi.
+            yleisyysDesimaali += sananYleisyysDesimaali;
+
+            //System.out.println("Sanan yleisyysDesimaali saadaan arvoista : " + sanatHashMap.get(edellinenSana).values().toArray()[i] + " / " +seuraavienSanojenYleisyysMaara+ " . Laskun tulos on : " + (float)(Integer)sanatHashMap.get(edellinenSana).values().toArray()[i]/seuraavienSanojenYleisyysMaara);
+
+
+            if(yleisyysDesimaali > satunnainenDesimaali){
+                //Onneksi olkoon sana on valittu se on avaimet.get(i)
+
+                //System.out.println("Valittiin sana  : " + sanatHashMap.get(edellinenSana).keySet().toArray()[i].toString() + "Arvolla : " + yleisyysDesimaali + " kun vaatimus oli : " + satunnainenDesimaali);
+                return avaimet.get(i);
+            }
+        }
+
+       
+
+
         String ensimmainenSana = "olen"; //TODO valitse ensimäinen sana satunnaisesti
         return ensimmainenSana;
     }
